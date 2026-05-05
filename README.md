@@ -4,7 +4,7 @@
 
 <h1>Zero Trust Network Blueprint</h1>
 
-<p><strong>The Strategic Foundation for Enterprise Network Security, Identity-Driven Micro-Segmentation, and Continuous Verification using Infrastructure as Code</strong></p>
+<p><strong>The Strategic Foundation for Enterprise Network Security, Identity-Driven Micro-Segmentation, and Continuous Verification.</strong></p>
 
 [![Standard: Zero-Trust-Excellence](https://img.shields.io/badge/Standard-Zero--Trust--Excellence-blue.svg?style=for-the-badge&labelColor=000000)]()
 [![Status: Production--Ready](https://img.shields.io/badge/Status-Production--Ready-emerald.svg?style=for-the-badge&labelColor=000000)]()
@@ -13,7 +13,7 @@
 <br/>
 
 > **"Never trust, always verify."** 
-> Zero Trust Network Blueprint (ZT-Blueprint) is an enterprise-grade platform designed to provide a secure, measurable, and highly automated foundation for global network transformation. It orchestrates the complex lifecycle of identity-driven access—from continuous authentication and adaptive policy evaluation to micro-segmentation, device posture validation, and unified security governance. By providing a centralized command center with unified zero-trust-as-code policies, automated enforcement pipelines, and immutable access logs, it enables organizations to eliminate legacy perimeter-based security, ensure least-privilege access, and drive secure digital transformation across the entire enterprise ecosystem.
+> **Zero Trust Network Blueprint** is an enterprise-grade platform designed to provide a secure, measurable, and highly automated foundation for global network transformation. It orchestrates the complex lifecycle of identity-driven access—from continuous authentication and adaptive policy evaluation to micro-segmentation and device posture validation.
 
 </div>
 
@@ -23,549 +23,262 @@
 
 Legacy perimeter-based security and fragmented access controls are strategic operational liabilities; lack of continuous verification is a primary barrier to secure cloud adoption. Organizations fail to implement Zero Trust not because of a lack of firewalls, but because of fragmented identity standards, lack of automated policy enforcement, and an inability to evaluate risk with operational precision.
 
-This platform provides the **Security Intelligence Plane**. It implements a complete **Enterprise Zero-Trust-as-Code Framework**—from modular Identity and Policy engines to specialized Proxy and Inspection hubs. By operationalizing Zero Trust as a primary architectural pillar, it ensures that your global network stack is not just "connected," but continuously optimized and delivered with strategic performance-aligned precision.
+This platform provides the **Security Intelligence Plane**. It implements a complete **Enterprise Zero-Trust-as-Code Framework**, enabling Security and Network teams to manage the zero-trust journey as a first-class citizen. By automating the verification of every request and orchestrating real-time micro-segmentation policies, we ensure that every organizational asset—from internal APIs to sensitive data lakes—is isolated by default, audited for history, and strictly protected against lateral movement and unauthorized access.
 
 ---
 
-## 🏛️ Core Platform Pillars
+## 📐 Architecture Storytelling: Principal Reference Models
 
-1. **Continuous Identity Verification**: High-performance engine for identity-based authentication, multi-factor challenges, and session validation.
-2. **Adaptive Policy Orchestration**: Carrier-grade engine for evaluating access requests against identity, device posture, and environmental context.
-3. **Identity-Driven Micro-Segmentation**: Intelligent orchestration of service-to-service isolation, mTLS-enforced links, and granular network zoning.
-4. **Device Posture Intelligence**: Advanced modeling of device health signals (encryption, OS version, security software) for real-time risk scoring.
-5. **Secure Access Proxy Fabric**: Carrier-grade proxy for application-level access control, session inspection, and threat detection.
-6. **Unified Security Command Center**: Deep observability into access patterns, policy decisions, and global risk distribution.
+### 1. Principal Architecture: Global Zero Trust Network Blueprint & Security Control Plane
+This diagram illustrates the end-to-end flow from user/device identification and adaptive policy evaluation to micro-segmented access, threat inspection, and institutional security auditing.
+
+```mermaid
+graph LR
+    %% Subgraph Definitions
+    subgraph IdentityPosture["Identity & Device Ingress"]
+        direction TB
+        User["User Identity (OIDC/SAML)"]
+        Device["Device Posture (Intune/CrowdStrike)"]
+        Context["Session Context (IP/Geo)"]
+    end
+
+    subgraph IntelligenceEngine["Zero Trust Intelligence Hub"]
+        direction TB
+        API["FastAPI Security Gateway"]
+        PDP["Policy Decision Point (PDP)"]
+        PEP["Policy Enforcement Point (PEP)"]
+        Risk["Adaptive Risk Engine"]
+    end
+
+    subgraph SegmentationPlane["Hardened Micro-Segments"]
+        direction TB
+        AppSegment["App Service Segment"]
+        DataSegment["Data Lake Segment"]
+        AdminSegment["Privileged Management Zone"]
+    end
+
+    subgraph OperationsHub["Institutional Security Hub"]
+        direction TB
+        Scorecard["Zero Trust Maturity Score"]
+        SIEM["Real-time SIEM Integration"]
+        Audit["Forensic Access Metadata Lake"]
+    end
+
+    subgraph DevOps["Security-as-Code Orchestration"]
+        direction TB
+        TF["Terraform Security Modules"]
+        Mesh["mTLS Service Mesh (Istio)"]
+        Proxy["Zero Trust Access Proxy"]
+    end
+
+    %% Flow Arrows
+    IdentityPosture -->|1. Submit Request| API
+    API -->|2. Evaluate Risk| Risk
+    Risk -->|3. Request Decision| PDP
+    PDP -->|4. Push Policy| PEP
+    
+    PEP -->|5. Verify Identity| Mesh
+    Mesh -->|6. Encrypt Link| AppSegment
+    AppSegment -->|7. Access Data| DataSegment
+    
+    API -->|8. Visualize Health| Scorecard
+    Scorecard -->|9. Track Anomalies| SIEM
+    Scorecard -->|10. Record Event| Audit
+    
+    TF -->|11. Provision Hub| IntelligenceEngine
+    Proxy -->|12. Gate External| PEP
+    Audit -->|13. Harden Policies| PDP
+
+    %% Styling
+    classDef identity fill:#f5f5f5,stroke:#616161,stroke-width:2px;
+    classDef intel fill:#eceff1,stroke:#455a64,stroke-width:2px;
+    classDef segments fill:#e1f5fe,stroke:#01579b,stroke-width:2px;
+    classDef ops fill:#e0f2f1,stroke:#004d40,stroke-width:2px;
+    classDef devops fill:#fffde7,stroke:#f57f17,stroke-width:2px;
+
+    class IdentityPosture identity;
+    class IntelligenceEngine intel;
+    class SegmentationPlane segments;
+    class OperationsHub ops;
+    class DevOps devops;
+```
+
+### 2. The Zero Trust Access Lifecycle Flow
+The continuous path of an access request from initial authentication and evaluation to active authorization, micro-segmentation, and forensic auditing.
+
+```mermaid
+graph LR
+    Authenticate["Authenticate User"] --> Evaluate["Evaluate Risk"]
+    Evaluate --> Authorize["Authorize Access"]
+    Authorize --> Segment["Segment Connection"]
+    Segment --> Audit["Forensic Audit"]
+```
+
+### 3. Identity-Driven Micro-Segmentation Flow
+Strategically isolating workloads by cryptographically verifying the identity of the source and destination service before permitting any network communication.
+
+```mermaid
+graph LR
+    SvcA["Service A (Identity)"] -->|mTLS Handshake| SvcB["Service B (Identity)"]
+    SvcB -->|Verify SPIFFE ID| SvcB
+    SvcB --> Success["Encrypted Link Established"]
+```
+
+### 4. Adaptive Policy Decision Engine (PDP/PEP) Flow
+Orchestrating the real-time evaluation of access requests against multi-dimensional policies including user role, device health, and environmental context.
+
+```mermaid
+graph TD
+    Request["Access Request"] --> PDP["Policy Decision Point"]
+    PDP -->|Query| Policy["OPA Policy Library"]
+    PDP -->|Query| Risk["Risk Score Service"]
+    PDP -->|Decision| PEP["Policy Enforcement Point"]
+```
+
+### 5. Device Posture & Health Attestation Hub
+Integrating signals from endpoint management and security tools (Intune, CrowdStrike, SentinelOne) to ensure only healthy, managed devices can access sensitive resources.
+
+```mermaid
+graph LR
+    Device["Endpoint Device"] --> Check["Posture Check"]
+    Check -->|Encrypted?| Result["Health Attestation"]
+    Check -->|AV Active?| Result
+    Result --> API["Security Gateway"]
+```
+
+### 6. Secure Access Service Edge (SASE) Topology
+Merging SD-WAN capabilities with cloud-native security (SWG, CASB, ZTNA) to provide a unified, secure edge for the global hybrid workforce.
+
+```mermaid
+graph TD
+    User["Remote User"] --> SASE["SASE Cloud Edge"]
+    SASE --> ZTNA["ZTNA (Internal Apps)"]
+    SASE --> CASB["CASB (SaaS Apps)"]
+    SASE --> SWG["SWG (Public Web)"]
+```
+
+### 7. mTLS-Enforced Service Mesh Architecture
+Protecting east-west traffic within the data center or cloud region by enforcing mutual TLS and fine-grained authorization policies at the proxy level.
+
+```mermaid
+graph LR
+    Mesh["Service Mesh Control Plane"] --> ProxyA["Envoy Proxy A"]
+    Mesh --> ProxyB["Envoy Proxy B"]
+    ProxyA -->|mTLS| ProxyB
+    ProxyB -->|Deny by Default| App["Application Workload"]
+```
+
+### 8. Institutional Zero Trust Scorecard
+Grading organizational security performance based on key indicators: Verification Depth, Blast Radius Containment, and Mean Time to Detection (MTTD).
+
+```mermaid
+graph TD
+    Post["ZT Maturity: 88%"] --> Risk["Implicit Trust: 12%"]
+    Post --- C1["Verification Coverage (95%)"]
+    Post --- C2["Segmentation Density (82%)"]
+```
+
+### 9. Identity & RBAC for Security Governance
+Managing fine-grained access to security policies, risk thresholds, and access logs between Security Architects, SOC Analysts, and Policy Administrators.
+
+```mermaid
+graph TD
+    Architect["Security Architect"] --> Policy["Define Access Models"]
+    Analyst["SOC Analyst"] --> Observe["Monitor Access Logs"]
+    Admin["Policy Admin"] --> Update["Apply Policy Updates"]
+```
+
+### 10. IaC Deployment: Security-as-Code Framework
+Using Terraform to deploy and manage the versioned distribution of the zero-trust hubs, access proxies, and forensic metadata lakes.
+
+```mermaid
+graph LR
+    HCL["Infrastructure Code"] --> TF["Terraform Apply"]
+    TF --> Engine["Security Control Plane Hub"]
+    Engine --> Proxies["Hardened Access Gateways"]
+```
+
+### 11. Metadata Lake for Forensic Access Audit
+Storing long-term records of every verification event, policy decision, and anomalous access attempt for institutional record-keeping and investigation.
+
+```mermaid
+graph LR
+    Event["Access Event"] --> Stream["Forensic Stream"]
+    Stream --> Lake["Security Metadata Lake"]
+    Lake --> Trends["Access & Risk Trends"]
+```
 
 ---
 
-## 📐 Architecture Storytelling: 12 Advanced Enterprise Diagrams
+## 🏛️ Core Security Pillars
 
-These high-level reference architectures represent enterprise-grade solutions designed for CTO-level presentations, demonstrating end-to-end data flows, strict security boundaries, and integration points across modern hybrid and multi-cloud environments.
-
-### 1. Enterprise Cloud Landing Zone (Hub & Spoke)
-*Business Purpose: Establishes a scalable, secure, and well-governed foundation for enterprise cloud workloads with centralized network inspection and identity management.*
-```mermaid
-graph TD
-    subgraph "On-Premises Corporate Network"
-        Users[Corporate Users]
-        DC[Active Directory]
-    end
-
-    subgraph "Cloud Core Infrastructure (Hub)"
-        direction TB
-        ERGateway[ExpressRoute / Direct Connect]
-        NVA[Next-Gen Firewall / WAF]
-        HubVNet[Hub Virtual Network]
-        ERGateway --> NVA
-        NVA --> HubVNet
-    end
-
-    subgraph "Cloud Workloads (Spokes)"
-        direction TB
-        SpokeApp[App Spoke VNet]
-        SpokeData[Data Spoke VNet]
-        AKS[Kubernetes Cluster]
-        SQL[(Cloud SQL / Postgres)]
-        SpokeApp --> AKS
-        SpokeData --> SQL
-    end
-
-    subgraph "Security & Identity Management"
-        IAM[Entra ID / AWS IAM]
-        SIEM[Microsoft Sentinel / SIEM]
-    end
-
-    Users -->|Private Link| ERGateway
-    DC -.->|Sync| IAM
-    HubVNet -->|VNet Peering| SpokeApp
-    HubVNet -->|VNet Peering| SpokeData
-    AKS -->|Private Endpoint| SQL
-    AKS -.->|Auth| IAM
-    HubVNet -.->|Logs| SIEM
-    SpokeApp -.->|Logs| SIEM
-```
-
-### 2. Zero Trust Security Architecture
-*Business Purpose: Implements a "never trust, always verify" model, enforcing continuous authentication, contextual access policies, and micro-segmentation across the enterprise.*
-```mermaid
-graph TD
-    subgraph "1. Verify Identity & Device"
-        User[End User / Employee]
-        Device[Managed Device]
-        MFA[Multi-Factor Auth]
-        IdP[Identity Provider]
-        User --> Device
-        Device --> MFA
-        MFA --> IdP
-    end
-
-    subgraph "2. Contextual Access Engine"
-        Policy[Zero Trust Policy Engine]
-        Risk[Risk Scoring / UEBA]
-        IdP --> Policy
-        Risk --> Policy
-    end
-
-    subgraph "3. Secure Access Edge (SSE)"
-        ZTNA[Zero Trust Network Access]
-        SWG[Secure Web Gateway]
-        CASB[Cloud App Security Broker]
-        Policy --> ZTNA
-        Policy --> SWG
-        Policy --> CASB
-    end
-
-    subgraph "4. Enterprise Resources"
-        SaaS[SaaS Applications]
-        IaaS[Cloud Workloads]
-        Data[(Sensitive Data Repositories)]
-        SWG --> SaaS
-        ZTNA --> IaaS
-        CASB --> Data
-    end
-
-    IaaS -.->|Telemetry| Risk
-    SaaS -.->|Telemetry| Risk
-```
-
-### 3. Generative AI & ML Enterprise Platform
-*Business Purpose: Provides a secure, scalable platform for building and deploying Large Language Models (LLMs) over enterprise data while protecting intellectual property.*
-```mermaid
-graph LR
-    subgraph "Client Applications"
-        Web[Web Portal]
-        Mobile[Mobile App]
-    end
-
-    subgraph "API & Security Gateway"
-        APIM[API Management]
-        WAF[Web Application Firewall]
-        APIM --> WAF
-    end
-
-    subgraph "GenAI Platform Zone"
-        Orchestrator[AI Orchestrator / LangChain]
-        LLM[Azure OpenAI / AWS Bedrock]
-        Embed[Embedding Model]
-        Orchestrator --> LLM
-        Orchestrator --> Embed
-    end
-
-    subgraph "Enterprise Data & Memory"
-        VectorDB[(Vector Database)]
-        DataLake[(Enterprise Data Lake)]
-        Indexer[Data Indexer / Crawler]
-        Indexer --> DataLake
-        Indexer --> VectorDB
-    end
-
-    Web --> APIM
-    Mobile --> APIM
-    WAF --> Orchestrator
-    Orchestrator <-->|Context Retrieval| VectorDB
-```
-
-### 4. DevSecOps & GitOps Pipeline
-*Business Purpose: Automates software delivery through a secure supply chain, embedding security scanning at every stage and enforcing infrastructure-as-code deployments.*
-```mermaid
-graph LR
-    subgraph "1. Code & Commit"
-        IDE[IDE / VS Code]
-        PreCommit[Pre-commit Hooks]
-        IDE --> PreCommit
-    end
-
-    subgraph "2. Source Control & CI"
-        Git[GitHub / GitLab]
-        SAST[SAST / SonarQube]
-        SCA[SCA / Dependabot]
-        Build[Container Build]
-        Git --> SAST
-        Git --> SCA
-        Git --> Build
-    end
-
-    subgraph "3. Artifact Repository"
-        Registry[Container Registry]
-        ImageScan[Image Vulnerability Scanner]
-        Registry --> ImageScan
-    end
-
-    subgraph "4. CD & Deployment"
-        GitOps[ArgoCD / Flux]
-        Infra[Terraform IaC]
-        GitOps --> Infra
-    end
-
-    subgraph "5. Production Environment"
-        K8s[Kubernetes Cluster]
-        Policy[OPA Gatekeeper / Kyverno]
-        K8s --> Policy
-    end
-
-    PreCommit -->|Push| Git
-    Build -->|Push Image| Registry
-    GitOps -->|Pull Image| Registry
-    GitOps -->|Deploy| K8s
-```
-
-### 5. Enterprise Data Platform (Mesh & Lakehouse)
-*Business Purpose: Democratizes data access by ingesting multi-modal sources into a governed Lakehouse, enabling advanced analytics, BI, and real-time event processing.*
-```mermaid
-graph LR
-    subgraph "Data Sources"
-        CRM[Salesforce / CRM]
-        ERP[SAP / ERP]
-        IoT[IoT Event Streams]
-    end
-
-    subgraph "Ingestion & Processing"
-        EventHub[Kafka / Event Hubs]
-        ADF[Data Factory / Airbyte]
-        Spark[Databricks / Spark Cluster]
-        CRM --> ADF
-        ERP --> ADF
-        IoT --> EventHub
-        ADF --> Spark
-        EventHub --> Spark
-    end
-
-    subgraph "Data Lakehouse"
-        Bronze[(Bronze / Raw)]
-        Silver[(Silver / Cleansed)]
-        Gold[(Gold / Curated)]
-        Spark --> Bronze
-        Bronze --> Silver
-        Silver --> Gold
-    end
-
-    subgraph "Data Consumption"
-        BI[PowerBI / Tableau]
-        ML[Machine Learning Models]
-        API[Data Service APIs]
-        Gold --> BI
-        Gold --> ML
-        Gold --> API
-    end
-```
-
-### 6. Enterprise Kubernetes (AKS/EKS) Platform
-*Business Purpose: Standardizes containerized workload orchestration with embedded security mesh, ingress routing, and native cloud-service integrations.*
-```mermaid
-graph TD
-    subgraph "Ingress & Routing"
-        LB[Cloud Load Balancer]
-        Ingress[Ingress Controller]
-        WAF[App Gateway WAF]
-        LB --> WAF
-        WAF --> Ingress
-    end
-
-    subgraph "Kubernetes Control Plane"
-        API[API Server]
-        ETCD[(etcd State)]
-        Sched[Scheduler]
-        API --> ETCD
-        API --> Sched
-    end
-
-    subgraph "Worker Nodes (App Workloads)"
-        PodA[Frontend Pods]
-        PodB[Backend Service Pods]
-        Mesh[Service Mesh / Istio]
-        Ingress --> Mesh
-        Mesh --> PodA
-        PodA --> PodB
-    end
-
-    subgraph "Platform Services"
-        CSI[Storage CSI]
-        CNI[Network CNI]
-        Sec[Runtime Security / Falco]
-        PodB --> CSI
-        PodB --> CNI
-        PodB --> Sec
-    end
-```
-
-### 7. Global Hub & Spoke Networking Architecture
-*Business Purpose: Connects global regions and on-premises datacenters via a highly available transit backbone, enforcing centralized firewalling and routing policies.*
-```mermaid
-graph TD
-    subgraph "Global Transit Backbone"
-        vWAN[Virtual WAN / Transit Gateway]
-        GlobalFW[Global NVA Firewall]
-        vWAN --> GlobalFW
-    end
-
-    subgraph "Region 1: North America"
-        Hub1[US Hub VNet]
-        Spoke1A[Prod Spoke US]
-        Spoke1B[Non-Prod Spoke US]
-        Hub1 --> Spoke1A
-        Hub1 --> Spoke1B
-    end
-
-    subgraph "Region 2: Europe"
-        Hub2[EU Hub VNet]
-        Spoke2A[Prod Spoke EU]
-        Spoke2B[Non-Prod Spoke EU]
-        Hub2 --> Spoke2A
-        Hub2 --> Spoke2B
-    end
-
-    subgraph "On-Premises / Edge"
-        HQ[Corporate HQ]
-        Branch[Branch Offices]
-    end
-
-    HQ -->|ExpressRoute / Direct Connect| vWAN
-    Branch -->|SD-WAN / IPsec| vWAN
-    vWAN --> Hub1
-    vWAN --> Hub2
-```
-
-### 8. Identity & Access Management (IAM) Broker
-*Business Purpose: Centralizes identity governance, enabling SSO, federated access, and conditional policies for employees, partners, and customers across all apps.*
-```mermaid
-graph LR
-    subgraph "External Identities"
-        B2C[Customers / B2C]
-        B2B[Partners / B2B]
-    end
-
-    subgraph "Internal Identities"
-        HR[HR System / Workday]
-        AD[On-Prem Active Directory]
-        HR -->|Provision| AD
-    end
-
-    subgraph "Identity Broker (Cloud IAM)"
-        Entra[Entra ID / Okta]
-        MFA[MFA / Authenticator]
-        CondAccess[Conditional Access Policies]
-        AD -->|Sync| Entra
-        B2C --> Entra
-        B2B --> Entra
-        Entra --> MFA
-        MFA --> CondAccess
-    end
-
-    subgraph "Enterprise Applications"
-        SaaS[O365 / Salesforce]
-        CloudApp[Cloud Native Apps]
-        Legacy[Legacy On-Prem Apps]
-        CondAccess -->|SAML / OIDC| SaaS
-        CondAccess -->|OAuth2| CloudApp
-        CondAccess -->|App Proxy| Legacy
-    end
-```
-
-### 9. Cloud Observability & Monitoring Platform
-*Business Purpose: Provides unified visibility into infrastructure, network, and application health, accelerating incident response through centralized logging and tracing.*
-```mermaid
-graph LR
-    subgraph "Telemetry Sources"
-        Infra[Cloud VMs / Network]
-        K8s[Kubernetes Metrics]
-        Apps[App Traces / APM]
-        Logs[Audit & Flow Logs]
-    end
-
-    subgraph "Collection & Routing"
-        Otel[OpenTelemetry Collector]
-        FluentBit[FluentBit / Promtail]
-        Infra --> Otel
-        K8s --> FluentBit
-        Apps --> Otel
-        Logs --> FluentBit
-    end
-
-    subgraph "Storage & Analysis"
-        Prometheus[(Prometheus)]
-        Elastic[(Elasticsearch / Loki)]
-        Jaeger[(Jaeger / Traces)]
-        Otel --> Prometheus
-        Otel --> Jaeger
-        FluentBit --> Elastic
-    end
-
-    subgraph "Visualization & Alerting"
-        Grafana[Grafana Dashboards]
-        Alert[AlertManager]
-        Pager[PagerDuty / Opsgenie]
-        Prometheus --> Grafana
-        Elastic --> Grafana
-        Jaeger --> Grafana
-        Prometheus --> Alert
-        Alert --> Pager
-    end
-```
-
-### 10. Multi-Cloud Resiliency & Active-Active BCDR
-*Business Purpose: Ensures business continuity and disaster recovery by distributing traffic across multiple cloud providers, utilizing asynchronous data replication.*
-```mermaid
-graph TD
-    subgraph "Global Traffic Routing"
-        DNS[Global DNS / Route53]
-        WAF[Global WAF / Cloudflare]
-        User[External Users] --> DNS
-        DNS --> WAF
-    end
-
-    subgraph "Primary Cloud (Azure / AWS)"
-        LB1[Load Balancer]
-        App1[Application Cluster]
-        DB1[(Primary Database)]
-        WAF --> LB1
-        LB1 --> App1
-        App1 --> DB1
-    end
-
-    subgraph "Secondary Cloud (GCP / AWS)"
-        LB2[Load Balancer]
-        App2[Application Cluster]
-        DB2[(Secondary DB - Read Replica)]
-        WAF -.->|Failover Traffic| LB2
-        LB2 --> App2
-        App2 --> DB2
-    end
-
-    subgraph "Data Replication"
-        Sync[Cross-Cloud Replication Engine]
-        DB1 -->|Async Replication| Sync
-        Sync --> DB2
-    end
-```
-
-### 11. Event-Driven Microservices Architecture
-*Business Purpose: Decouples domain services for independent scalability, using an asynchronous message bus to handle high-throughput, real-time event processing.*
-```mermaid
-graph LR
-    subgraph "Producers"
-        UI[Web/Mobile UI]
-        IoT[IoT Devices]
-        API[External API Hook]
-    end
-
-    subgraph "Event Broker"
-        Gateway[API Gateway]
-        Kafka[Event Bus / Kafka]
-        Gateway --> Kafka
-    end
-
-    subgraph "Consumers (Microservices)"
-        Order[Order Service]
-        Inventory[Inventory Service]
-        Notify[Notification Service]
-        Kafka -->|Topic: Orders| Order
-        Kafka -->|Topic: Stock| Inventory
-        Kafka -->|Topic: Alerts| Notify
-    end
-
-    subgraph "Data & State"
-        DB1[(NoSQL DB)]
-        DB2[(Relational DB)]
-        Cache[(Redis Cache)]
-        Order --> DB1
-        Inventory --> DB2
-        Notify --> Cache
-    end
-
-    UI --> Gateway
-    IoT --> Gateway
-    API --> Gateway
-```
-
-### 12. Secure Application Delivery & Edge Processing
-*Business Purpose: Protects public-facing applications from DDoS attacks and exploits at the edge, while optimizing content delivery through caching and bot mitigation.*
-```mermaid
-graph TD
-    subgraph "Edge / CDN Level"
-        User[End Users]
-        CDN[Content Delivery Network]
-        DDoS[DDoS Protection]
-        Bot[Bot Management Engine]
-        User --> CDN
-        CDN --> DDoS
-        DDoS --> Bot
-    end
-
-    subgraph "Security Perimeter"
-        WAF[Web Application Firewall]
-        API[API Gateway]
-        Bot --> WAF
-        WAF --> API
-    end
-
-    subgraph "Application Hosting"
-        AppService[App Service / ECS]
-        Serverless[Functions / Lambda]
-        API --> AppService
-        API --> Serverless
-    end
-
-    subgraph "Backend Services"
-        DB[(Managed Database)]
-        Storage[(Blob Storage)]
-        AppService --> DB
-        Serverless --> Storage
-    end
-```
+1.  **Continuous Verification**: Explicitly authenticating and authorizing every request, regardless of source location.
+2.  **Least Privilege Access**: Limiting user and service access to only the specific resources required for their function.
+3.  **Identity-Based Segmentation**: Moving from IP-based firewalls to cryptographically-verified identity boundaries.
+4.  **Adaptive Risk Evaluation**: Dynamically adjusting access based on real-time device health and session context.
+5.  **Micro-Perimeter Defense**: Hard-fencing every individual workload and data repository within the network.
+6.  **Full Access Auditability**: Immutable recording of every security decision and network interaction for institutional forensics.
 
 ---
 
 ## 🛠️ Technical Stack & Implementation
 
-### Platform Engine & APIs
-- **Framework**: Python 3.11+ / FastAPI.
-- **Identity Engine**: High-performance verification of identity, credentials, and sessions.
-- **Policy Engine**: Adaptive evaluation of access requests against multi-dimensional policies.
-- **Segmentation Engine**: Intelligent orchestration of micro-segmentation and link isolation.
-- **Posture Engine**: Real-time evaluation of device health signals and risk scoring.
-- **Proxy Fabric**: Application-level access proxy for secure session management.
-- **Cache**: Redis for session tracking and real-time policy status updates.
-- **Persistence**: PostgreSQL for security metadata, access logs, and audit trails.
-- **Observability**: Prometheus/Grafana integration for security factory monitoring.
+### Security Engine & APIs
+*   **Framework**: Python 3.11+ / FastAPI.
+*   **Policy Decision Core**: Integration with OPA (Open Policy Agent) for high-performance policy evaluation.
+*   **Identity Orchestrator**: Multi-provider support (Entra ID, Okta, Auth0) with SPIFFE/Spire integration.
+*   **Risk Engine**: Adaptive scoring based on IP reputation, geo-velocity, and device attestation.
+*   **State Management**: PostgreSQL (Metadata Lake) and Redis (Policy Cache).
 
-### Frontend (Security Command Center)
-- **Framework**: React 18 / Vite.
-- **Theme**: Slate / Zinc (Modern Security & Zero Trust aesthetic).
-- **Visualization**: Recharts for verification trends and risk distribution.
+### Security Dashboard (UI)
+*   **Framework**: React 18 / Vite.
+*   **Theme**: Slate, Zinc, Charcoal (Modern high-trust aesthetic).
+*   **Visualization**: Recharts for maturity scoring, risk distribution, and access success rates.
 
-### Infrastructure
-- **Runtime**: AWS EKS (Kubernetes).
-- **Deployment**: Helm charts for security workers and access gateways.
-- **IaC**: Terraform (Modular with Security Infrastructure focus).
+### Infrastructure & DevOps
+*   **Runtime**: AWS EKS or Azure Kubernetes Service (AKS).
+*   **Mesh Fabric**: Istio with Envoy sidecars for transparent mTLS enforcement.
+*   **IaC**: Modular Terraform for deploying the security hub and access gateway distributions.
+
+---
+
+## 🏗️ IaC Mapping (Module Structure)
+
+| Module | Purpose | Real Services |
+| :--- | :--- | :--- |
+| **`infrastructure/sec_hub`** | Central management plane | EKS, PostgreSQL, Redis |
+| **`infrastructure/proxies`** | Zero Trust Access Gateways | Envoy, Cloudfront, WAF |
+| **`infrastructure/policy`** | Policy-as-Code library | OPA, Rego, Git |
+| **`infrastructure/auditing`** | Forensic security sinks | S3, Athena, Quicksight |
 
 ---
 
 ## 🚀 Deployment Guide
 
-### Local Development
+### Local Principal Environment
 ```bash
-# Clone the repository
+# Clone the security platform
 git clone https://github.com/devopstrio/zero-trust-network-blueprint.git
 cd zero-trust-network-blueprint
 
-# Setup environment
+# Configure environment
 cp .env.example .env
 
-# Launch the Security stack (API, Engines, DB, Redis, UI)
+# Launch the Security stack
 make up
 
-# Enforce initial Zero Trust policies
-make enforce
-
-# Simulate access requests
-make simulate
-
-# Validate security architecture
-make test
+# Trigger a mock access request and policy evaluation simulation
+make simulate-access
 ```
+
 Access the Security Dashboard at `http://localhost:3000`.
 
 ---
 
 ## 📜 License
 Distributed under the MIT License. See `LICENSE` for more information.
+
+---
+<div align="center">
+  <p>© 2026 Devopstrio. All rights reserved.</p>
+</div>
