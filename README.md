@@ -38,357 +38,479 @@ This platform provides the **Security Intelligence Plane**. It implements a comp
 
 ---
 
-## 📐 Architecture Storytelling: 50+ Advanced Diagrams
+## 📐 Architecture Storytelling: 12 Advanced Enterprise Diagrams
 
-### 1. The Zero-Trust-as-Code Loop
-*The flow from identity verification to secure micro-segmented access.*
+These high-level reference architectures represent enterprise-grade solutions designed for CTO-level presentations, demonstrating end-to-end data flows, strict security boundaries, and integration points across modern hybrid and multi-cloud environments.
+
+### 1. Enterprise Cloud Landing Zone (Hub & Spoke)
+*Business Purpose: Establishes a scalable, secure, and well-governed foundation for enterprise cloud workloads with centralized network inspection and identity management.*
 ```mermaid
 graph TD
-    subgraph "Phase 1: Verification"
-        Id[Identity Check]
-        Post[Posture Check]
-        Context[Context Check]
+    subgraph "On-Premises Corporate Network"
+        Users[Corporate Users]
+        DC[Active Directory]
     end
 
-    subgraph "Phase 2: Policy"
-        Eval[Policy Eval]
-        Risk[Risk Score]
-        Decision[Access Decision]
+    subgraph "Cloud Core Infrastructure (Hub)"
+        direction TB
+        ERGateway[ExpressRoute / Direct Connect]
+        NVA[Next-Gen Firewall / WAF]
+        HubVNet[Hub Virtual Network]
+        ERGateway --> NVA
+        NVA --> HubVNet
     end
 
-    subgraph "Phase 3: Enforcement"
-        Proxy[Access Proxy]
-        Mesh[Micro-Segment]
-        Inspect[Traffic Inspect]
+    subgraph "Cloud Workloads (Spokes)"
+        direction TB
+        SpokeApp[App Spoke VNet]
+        SpokeData[Data Spoke VNet]
+        AKS[Kubernetes Cluster]
+        SQL[(Cloud SQL / Postgres)]
+        SpokeApp --> AKS
+        SpokeData --> SQL
     end
 
-    subgraph "Phase 4: Operations"
-        Audit[Audit Log]
-        Alert[Security Alert]
-        Dash[Ops Dashboard]
+    subgraph "Security & Identity Management"
+        IAM[Entra ID / AWS IAM]
+        SIEM[Microsoft Sentinel / SIEM]
     end
 
-    Id -->|1. Authenticate| Post
-    Post -->|2. Score| Context
-    Context -->|3. Feed| Eval
-    Eval -->|4. Analyze| Risk
-    Risk -->|5. Decide| Decision
-    Decision -->|6. Provision| Proxy
-    Proxy -->|7. Isolate| Mesh
-    Mesh -->|8. Monitor| Inspect
-    Inspect -->|9. Record| Audit
-    Audit -->|10. Visualize| Dash
+    Users -->|Private Link| ERGateway
+    DC -.->|Sync| IAM
+    HubVNet -->|VNet Peering| SpokeApp
+    HubVNet -->|VNet Peering| SpokeData
+    AKS -->|Private Endpoint| SQL
+    AKS -.->|Auth| IAM
+    HubVNet -.->|Logs| SIEM
+    SpokeApp -.->|Logs| SIEM
 ```
 
-### 2. Micro-Segmentation Topology
+### 2. Zero Trust Security Architecture
+*Business Purpose: Implements a "never trust, always verify" model, enforcing continuous authentication, contextual access policies, and micro-segmentation across the enterprise.*
 ```mermaid
-graph LR
-    User[Verified User] --> Proxy[Access Proxy]
-    Proxy --> App[App Segment]
-    App -->|mTLS| DB[DB Segment]
-    App -.-x|Blocked| Vault[Sensitive Segment]
+graph TD
+    subgraph "1. Verify Identity & Device"
+        User[End User / Employee]
+        Device[Managed Device]
+        MFA[Multi-Factor Auth]
+        IdP[Identity Provider]
+        User --> Device
+        Device --> MFA
+        MFA --> IdP
+    end
+
+    subgraph "2. Contextual Access Engine"
+        Policy[Zero Trust Policy Engine]
+        Risk[Risk Scoring / UEBA]
+        IdP --> Policy
+        Risk --> Policy
+    end
+
+    subgraph "3. Secure Access Edge (SSE)"
+        ZTNA[Zero Trust Network Access]
+        SWG[Secure Web Gateway]
+        CASB[Cloud App Security Broker]
+        Policy --> ZTNA
+        Policy --> SWG
+        Policy --> CASB
+    end
+
+    subgraph "4. Enterprise Resources"
+        SaaS[SaaS Applications]
+        IaaS[Cloud Workloads]
+        Data[(Sensitive Data Repositories)]
+        SWG --> SaaS
+        ZTNA --> IaaS
+        CASB --> Data
+    end
+
+    IaaS -.->|Telemetry| Risk
+    SaaS -.->|Telemetry| Risk
 ```
 
-### 3. Policy Evaluation Flow
+### 3. Generative AI & ML Enterprise Platform
+*Business Purpose: Provides a secure, scalable platform for building and deploying Large Language Models (LLMs) over enterprise data while protecting intellectual property.*
 ```mermaid
 graph LR
-    Request[Access Request] --> ID{Identity Valid?}
-    ID -->|Yes| POST{Posture OK?}
-    POST -->|Yes| POL{Policy Match?}
-    POL -->|Yes| ALLOW[Grant Access]
-    POL -->|No| DENY[Block & Log]
+    subgraph "Client Applications"
+        Web[Web Portal]
+        Mobile[Mobile App]
+    end
+
+    subgraph "API & Security Gateway"
+        APIM[API Management]
+        WAF[Web Application Firewall]
+        APIM --> WAF
+    end
+
+    subgraph "GenAI Platform Zone"
+        Orchestrator[AI Orchestrator / LangChain]
+        LLM[Azure OpenAI / AWS Bedrock]
+        Embed[Embedding Model]
+        Orchestrator --> LLM
+        Orchestrator --> Embed
+    end
+
+    subgraph "Enterprise Data & Memory"
+        VectorDB[(Vector Database)]
+        DataLake[(Enterprise Data Lake)]
+        Indexer[Data Indexer / Crawler]
+        Indexer --> DataLake
+        Indexer --> VectorDB
+    end
+
+    Web --> APIM
+    Mobile --> APIM
+    WAF --> Orchestrator
+    Orchestrator <-->|Context Retrieval| VectorDB
 ```
 
-### 4. Zero Trust Architecture
+### 4. DevSecOps & GitOps Pipeline
+*Business Purpose: Automates software delivery through a secure supply chain, embedding security scanning at every stage and enforcing infrastructure-as-code deployments.*
 ```mermaid
 graph LR
-    UI[React Dashboard] --> API[FastAPI Gateway]
-    API --> Cache[(Redis State Cache)]
-    API --> DB[(Postgres Security DB)]
-    API --> Engine[Policy Engine]
+    subgraph "1. Code & Commit"
+        IDE[IDE / VS Code]
+        PreCommit[Pre-commit Hooks]
+        IDE --> PreCommit
+    end
+
+    subgraph "2. Source Control & CI"
+        Git[GitHub / GitLab]
+        SAST[SAST / SonarQube]
+        SCA[SCA / Dependabot]
+        Build[Container Build]
+        Git --> SAST
+        Git --> SCA
+        Git --> Build
+    end
+
+    subgraph "3. Artifact Repository"
+        Registry[Container Registry]
+        ImageScan[Image Vulnerability Scanner]
+        Registry --> ImageScan
+    end
+
+    subgraph "4. CD & Deployment"
+        GitOps[ArgoCD / Flux]
+        Infra[Terraform IaC]
+        GitOps --> Infra
+    end
+
+    subgraph "5. Production Environment"
+        K8s[Kubernetes Cluster]
+        Policy[OPA Gatekeeper / Kyverno]
+        K8s --> Policy
+    end
+
+    PreCommit -->|Push| Git
+    Build -->|Push Image| Registry
+    GitOps -->|Pull Image| Registry
+    GitOps -->|Deploy| K8s
 ```
 
-### 5. Deployment Topology: Regional Security Factory
+### 5. Enterprise Data Platform (Mesh & Lakehouse)
+*Business Purpose: Democratizes data access by ingesting multi-modal sources into a governed Lakehouse, enabling advanced analytics, BI, and real-time event processing.*
 ```mermaid
 graph LR
-    Region[Cloud Region] --> Factory[Security Factory]
-    Factory --> S1[Identity Workers]
-    Factory --> S2[Policy Nodes]
-    Factory --> S3[Proxy Gateways]
-    S1 --> Auth[(IdP Integration)]
+    subgraph "Data Sources"
+        CRM[Salesforce / CRM]
+        ERP[SAP / ERP]
+        IoT[IoT Event Streams]
+    end
+
+    subgraph "Ingestion & Processing"
+        EventHub[Kafka / Event Hubs]
+        ADF[Data Factory / Airbyte]
+        Spark[Databricks / Spark Cluster]
+        CRM --> ADF
+        ERP --> ADF
+        IoT --> EventHub
+        ADF --> Spark
+        EventHub --> Spark
+    end
+
+    subgraph "Data Lakehouse"
+        Bronze[(Bronze / Raw)]
+        Silver[(Silver / Cleansed)]
+        Gold[(Gold / Curated)]
+        Spark --> Bronze
+        Bronze --> Silver
+        Silver --> Gold
+    end
+
+    subgraph "Data Consumption"
+        BI[PowerBI / Tableau]
+        ML[Machine Learning Models]
+        API[Data Service APIs]
+        Gold --> BI
+        Gold --> ML
+        Gold --> API
+    end
 ```
 
-### 6. Risk Scoring Model
+### 6. Enterprise Kubernetes (AKS/EKS) Platform
+*Business Purpose: Standardizes containerized workload orchestration with embedded security mesh, ingress routing, and native cloud-service integrations.*
 ```mermaid
-graph LR
-    Posture[Posture Signal] --> Score[Risk Calculator]
-    Identity[Behavioral Signal] --> Score
-    Score --> Decision{Risk > Threshold?}
-    Decision -->|Yes| Deny[Block Session]
+graph TD
+    subgraph "Ingress & Routing"
+        LB[Cloud Load Balancer]
+        Ingress[Ingress Controller]
+        WAF[App Gateway WAF]
+        LB --> WAF
+        WAF --> Ingress
+    end
+
+    subgraph "Kubernetes Control Plane"
+        API[API Server]
+        ETCD[(etcd State)]
+        Sched[Scheduler]
+        API --> ETCD
+        API --> Sched
+    end
+
+    subgraph "Worker Nodes (App Workloads)"
+        PodA[Frontend Pods]
+        PodB[Backend Service Pods]
+        Mesh[Service Mesh / Istio]
+        Ingress --> Mesh
+        Mesh --> PodA
+        PodA --> PodB
+    end
+
+    subgraph "Platform Services"
+        CSI[Storage CSI]
+        CNI[Network CNI]
+        Sec[Runtime Security / Falco]
+        PodB --> CSI
+        PodB --> CNI
+        PodB --> Sec
+    end
 ```
 
-### 7. Foundation: Multi-Environment Setup
+### 7. Global Hub & Spoke Networking Architecture
+*Business Purpose: Connects global regions and on-premises datacenters via a highly available transit backbone, enforcing centralized firewalling and routing policies.*
 ```mermaid
-graph LR
-    F[Foun] --> M[Mult]
+graph TD
+    subgraph "Global Transit Backbone"
+        vWAN[Virtual WAN / Transit Gateway]
+        GlobalFW[Global NVA Firewall]
+        vWAN --> GlobalFW
+    end
+
+    subgraph "Region 1: North America"
+        Hub1[US Hub VNet]
+        Spoke1A[Prod Spoke US]
+        Spoke1B[Non-Prod Spoke US]
+        Hub1 --> Spoke1A
+        Hub1 --> Spoke1B
+    end
+
+    subgraph "Region 2: Europe"
+        Hub2[EU Hub VNet]
+        Spoke2A[Prod Spoke EU]
+        Spoke2B[Non-Prod Spoke EU]
+        Hub2 --> Spoke2A
+        Hub2 --> Spoke2B
+    end
+
+    subgraph "On-Premises / Edge"
+        HQ[Corporate HQ]
+        Branch[Branch Offices]
+    end
+
+    HQ -->|ExpressRoute / Direct Connect| vWAN
+    Branch -->|SD-WAN / IPsec| vWAN
+    vWAN --> Hub1
+    vWAN --> Hub2
 ```
 
-### 8. Networking: Secure Transit Gateway
+### 8. Identity & Access Management (IAM) Broker
+*Business Purpose: Centralizes identity governance, enabling SSO, federated access, and conditional policies for employees, partners, and customers across all apps.*
 ```mermaid
 graph LR
-    N[Netw] --> S[Secu]
+    subgraph "External Identities"
+        B2C[Customers / B2C]
+        B2B[Partners / B2B]
+    end
+
+    subgraph "Internal Identities"
+        HR[HR System / Workday]
+        AD[On-Prem Active Directory]
+        HR -->|Provision| AD
+    end
+
+    subgraph "Identity Broker (Cloud IAM)"
+        Entra[Entra ID / Okta]
+        MFA[MFA / Authenticator]
+        CondAccess[Conditional Access Policies]
+        AD -->|Sync| Entra
+        B2C --> Entra
+        B2B --> Entra
+        Entra --> MFA
+        MFA --> CondAccess
+    end
+
+    subgraph "Enterprise Applications"
+        SaaS[O365 / Salesforce]
+        CloudApp[Cloud Native Apps]
+        Legacy[Legacy On-Prem Apps]
+        CondAccess -->|SAML / OIDC| SaaS
+        CondAccess -->|OAuth2| CloudApp
+        CondAccess -->|App Proxy| Legacy
+    end
 ```
 
-### 9. Component: Identity Engine
+### 9. Cloud Observability & Monitoring Platform
+*Business Purpose: Provides unified visibility into infrastructure, network, and application health, accelerating incident response through centralized logging and tracing.*
 ```mermaid
 graph LR
-    C[Comp] --> I[Iden]
+    subgraph "Telemetry Sources"
+        Infra[Cloud VMs / Network]
+        K8s[Kubernetes Metrics]
+        Apps[App Traces / APM]
+        Logs[Audit & Flow Logs]
+    end
+
+    subgraph "Collection & Routing"
+        Otel[OpenTelemetry Collector]
+        FluentBit[FluentBit / Promtail]
+        Infra --> Otel
+        K8s --> FluentBit
+        Apps --> Otel
+        Logs --> FluentBit
+    end
+
+    subgraph "Storage & Analysis"
+        Prometheus[(Prometheus)]
+        Elastic[(Elasticsearch / Loki)]
+        Jaeger[(Jaeger / Traces)]
+        Otel --> Prometheus
+        Otel --> Jaeger
+        FluentBit --> Elastic
+    end
+
+    subgraph "Visualization & Alerting"
+        Grafana[Grafana Dashboards]
+        Alert[AlertManager]
+        Pager[PagerDuty / Opsgenie]
+        Prometheus --> Grafana
+        Elastic --> Grafana
+        Jaeger --> Grafana
+        Prometheus --> Alert
+        Alert --> Pager
+    end
 ```
 
-### 10. Component: Policy Engine
+### 10. Multi-Cloud Resiliency & Active-Active BCDR
+*Business Purpose: Ensures business continuity and disaster recovery by distributing traffic across multiple cloud providers, utilizing asynchronous data replication.*
 ```mermaid
-graph LR
-    C[Comp] --> P[Poli]
+graph TD
+    subgraph "Global Traffic Routing"
+        DNS[Global DNS / Route53]
+        WAF[Global WAF / Cloudflare]
+        User[External Users] --> DNS
+        DNS --> WAF
+    end
+
+    subgraph "Primary Cloud (Azure / AWS)"
+        LB1[Load Balancer]
+        App1[Application Cluster]
+        DB1[(Primary Database)]
+        WAF --> LB1
+        LB1 --> App1
+        App1 --> DB1
+    end
+
+    subgraph "Secondary Cloud (GCP / AWS)"
+        LB2[Load Balancer]
+        App2[Application Cluster]
+        DB2[(Secondary DB - Read Replica)]
+        WAF -.->|Failover Traffic| LB2
+        LB2 --> App2
+        App2 --> DB2
+    end
+
+    subgraph "Data Replication"
+        Sync[Cross-Cloud Replication Engine]
+        DB1 -->|Async Replication| Sync
+        Sync --> DB2
+    end
 ```
 
-### 11. Component: Proxy Hub
+### 11. Event-Driven Microservices Architecture
+*Business Purpose: Decouples domain services for independent scalability, using an asynchronous message bus to handle high-throughput, real-time event processing.*
 ```mermaid
 graph LR
-    C[Comp] --> P[Prox]
+    subgraph "Producers"
+        UI[Web/Mobile UI]
+        IoT[IoT Devices]
+        API[External API Hook]
+    end
+
+    subgraph "Event Broker"
+        Gateway[API Gateway]
+        Kafka[Event Bus / Kafka]
+        Gateway --> Kafka
+    end
+
+    subgraph "Consumers (Microservices)"
+        Order[Order Service]
+        Inventory[Inventory Service]
+        Notify[Notification Service]
+        Kafka -->|Topic: Orders| Order
+        Kafka -->|Topic: Stock| Inventory
+        Kafka -->|Topic: Alerts| Notify
+    end
+
+    subgraph "Data & State"
+        DB1[(NoSQL DB)]
+        DB2[(Relational DB)]
+        Cache[(Redis Cache)]
+        Order --> DB1
+        Inventory --> DB2
+        Notify --> Cache
+    end
+
+    UI --> Gateway
+    IoT --> Gateway
+    API --> Gateway
 ```
 
-### 12. Component: Posture Engine
+### 12. Secure Application Delivery & Edge Processing
+*Business Purpose: Protects public-facing applications from DDoS attacks and exploits at the edge, while optimizing content delivery through caching and bot mitigation.*
 ```mermaid
-graph LR
-    C[Comp] --> P[Post]
-```
+graph TD
+    subgraph "Edge / CDN Level"
+        User[End Users]
+        CDN[Content Delivery Network]
+        DDoS[DDoS Protection]
+        Bot[Bot Management Engine]
+        User --> CDN
+        CDN --> DDoS
+        DDoS --> Bot
+    end
 
-### 13. Logic: Continuous Authentication
-```mermaid
-graph LR
-    L[Logi] --> Cont[Cont]
-```
+    subgraph "Security Perimeter"
+        WAF[Web Application Firewall]
+        API[API Gateway]
+        Bot --> WAF
+        WAF --> API
+    end
 
-### 14. Logic: Adaptive Policy Eval
-```mermaid
-graph LR
-    L[Logi] --> Adap[Adap]
-```
+    subgraph "Application Hosting"
+        AppService[App Service / ECS]
+        Serverless[Functions / Lambda]
+        API --> AppService
+        API --> Serverless
+    end
 
-### 15. Logic: Micro-segmentation Logic
-```mermaid
-graph LR
-    L[Logi] --> Micr[Micr]
-```
-
-### 16. Logic: Risk-Based Blocking
-```mermaid
-graph LR
-    L[Logi] --> Risk[Risk]
-```
-
-### 17. Architecture: Global Control Plane
-```mermaid
-graph LR
-    A[Arch] --> G[Glob]
-```
-
-### 18. Architecture: Security Mesh
-```mermaid
-graph LR
-    A[Arch] --> S[Secu]
-```
-
-### 19. Architecture: Multi-Sink Reporting
-```mermaid
-graph LR
-    A[Arch] --> M[Mult]
-```
-
-### 20. Pattern: Zero-Trust-as-Code
-```mermaid
-graph LR
-    P[Patt] --> Z[Zero]
-```
-
-### 21. Pattern: Immutable Target Zones
-```mermaid
-graph LR
-    P[Patt] --> I[Immu]
-```
-
-### 22. Pattern: Policy Enforcement Points
-```mermaid
-graph LR
-    P[Patt] --> Poli[Poli]
-```
-
-### 23. Security: Signed Security Artifacts
-```mermaid
-graph LR
-    S[Secu] --> S[Sign]
-```
-
-### 24. Security: RBAC Policy Access
-```mermaid
-graph LR
-    S[Secu] --> R[RBAC]
-```
-
-### 25. Security: Secure Audit Record
-```mermaid
-graph LR
-    S[Secu] --> S[Secu]
-```
-
-### 26. Feature: Access Heatmap UI
-```mermaid
-graph LR
-    F[Feat] --> A[Acce]
-```
-
-### 27. Feature: Real-time Velocity Tailing
-```mermaid
-graph LR
-    F[Feat] --> R[Real]
-```
-
-### 28. Feature: Auto-generated PCAPs
-```mermaid
-graph LR
-    F[Feat] --> A[Auto]
-```
-
-### 29. Compliance: NIST ZT Audits
-```mermaid
-graph LR
-    C[Comp] --> N[NIST]
-```
-
-### 30. Compliance: Audit Trail Persistence
-```mermaid
-graph LR
-    C[Comp] --> A[Audi]
-```
-
-### 31. Infrastructure: Redis State Cache
-```mermaid
-graph LR
-    I[Infr] --> R[Redi]
-```
-
-### 32. Infrastructure: Postgres Security DB
-```mermaid
-graph LR
-    I[Infr] --> P[Post]
-```
-
-### 33. Deployment: Kubernetes Security Pods
-```mermaid
-graph LR
-    D[Depl] --> K[Kube]
-```
-
-### 34. Deployment: Multi-Region Policy Sync
-```mermaid
-graph LR
-    D[Depl] --> M[Mult]
-```
-
-### 35. Monitoring: verification velocity KPI
-```mermaid
-graph LR
-    M[Moni] --> V[Veri]
-```
-
-### 36. Monitoring: posture compliance KPI
-```mermaid
-graph LR
-    M[Moni] --> P[Post]
-```
-
-### 37. UI: Unified Security Dashboard
-```mermaid
-graph LR
-    U[UI] --> U[Unif]
-```
-
-### 38. UI: Identity Hub UI
-```mermaid
-graph LR
-    U[UI] --> I[Iden]
-```
-
-### 39. UI: ROI View
-```mermaid
-graph LR
-    U[UI] --> R[ROIV]
-```
-
-### 40. UI: Risk Heatmap
-```mermaid
-graph LR
-    U[UI] --> R[Risk]
-```
-
-### 41. CI/CD: Policy validation pipeline
-```mermaid
-graph LR
-    C[CICD] --> P[Poli]
-```
-
-### 42. CI/CD: Security engine tests
-```mermaid
-graph LR
-    C[CICD] --> S[Secu]
-```
-
-### 43. Strategy: Identity-First Security
-```mermaid
-graph LR
-    S[Stra] --> I[Iden]
-```
-
-### 44. Strategy: Data-Driven Trust
-```mermaid
-graph LR
-    S[Stra] --> D[Data]
-```
-
-### 45. Feature: Multi-Cloud Search Bridge
-```mermaid
-graph LR
-    F[Feat] --> M[Mult]
-```
-
-### 46. Feature: Real-time Outage Alerts
-```mermaid
-graph LR
-    F[Feat] --> R[Real]
-```
-
-### 47. Feature: Threat Forecasting
-```mermaid
-graph LR
-    F[Feat] --> T[Thre]
-```
-
-### 48. Logic: Cost Comparison Engine
-```mermaid
-graph LR
-    L[Logi] --> C[Cost]
-```
-
-### 49. Data Model: Security Task Entity
-```mermaid
-graph LR
-    D[Data] --> S[Secu]
-```
-
-### 50. Enterprise Zero Trust Excellence
-```mermaid
-graph LR
-    E[Entr] --> E[Zero]
+    subgraph "Backend Services"
+        DB[(Managed Database)]
+        Storage[(Blob Storage)]
+        AppService --> DB
+        Serverless --> Storage
+    end
 ```
 
 ---
